@@ -2,15 +2,10 @@
 
 module Day02.Main where
 import           Data.List                      ( foldl'
-                                                , subsequences
                                                 , nub
                                                 )
-import           Data.Functor
-import qualified Data.Text                     as Text
-import qualified Data.Text.IO                  as TextIO
 import           Data.Map.Lazy                  ( Map )
 import qualified Data.Map.Lazy                 as Map
-import           Data.Set                       ( Set )
 import qualified Data.Set                      as Set
 
 main :: IO ()
@@ -23,7 +18,7 @@ main = do
   putStrLn $ "Checksum: " <> (show checksum)
 
   let allWithOneCharacterRemoved = inputs >>= oneCharacterRemoved
-  let (Just firstMatch) = findFirstRepeated allWithOneCharacterRemoved
+  let (Just firstMatch)          = findFirstRepeated allWithOneCharacterRemoved
   putStrLn $ "Common characters in closest IDs: " <> (show firstMatch)
 
 letterCounts :: String -> Map Char Int
@@ -49,7 +44,7 @@ deleteN i (a : as) | i == 0    = as
 
 findFirstRepeated :: Ord a => [a] -> Maybe a
 findFirstRepeated = loop Set.empty
-  where
-    loop _ [] = Nothing
-    loop seen (a : as) =
-      if (Set.member a seen) then Just a else loop (Set.insert a seen) as
+ where
+  loop _ [] = Nothing
+  loop seen (a : as) =
+    if (Set.member a seen) then Just a else loop (Set.insert a seen) as

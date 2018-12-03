@@ -10,9 +10,11 @@ import qualified Data.Text                     as Text
 import qualified Data.Text.IO                  as TextIO
 import           Data.Map.Strict                ( Map )
 import qualified Data.Map.Strict               as Map
-import           Data.Attoparsec.Text
-import           Data.Set                       ( Set )
-import qualified Data.Set                      as Set
+import           Data.Attoparsec.Text           ( parseOnly
+                                                , string
+                                                , char
+                                                , decimal
+                                                )
 
 newtype ClaimId = ClaimId Int deriving (Eq, Ord, Show)
 data Claim = Claim
@@ -43,12 +45,12 @@ letterCounts = foldl' f Map.empty
 
 parseClaim :: Text -> Either String Claim
 parseClaim = parseOnly $ do
-  cid            <- parseClaimId
-  _              <- string " @ "
-  (xMin, yMin)   <- parseCoords
-  _              <- string ": "
-  (xSize, ySize) <- parseSizes
-  pure $ Claim cid xMin yMin xSize ySize
+  cid              <- parseClaimId
+  _                <- string " @ "
+  (xMin', yMin')   <- parseCoords
+  _                <- string ": "
+  (xSize', ySize') <- parseSizes
+  pure $ Claim cid xMin' yMin' xSize' ySize'
  where
   parseClaimId = ClaimId <$> (char '#' *> decimal)
   parseCoords  = do
@@ -83,5 +85,5 @@ hasNoOverlaps :: Map Coord Int -> Claim -> Bool
 hasNoOverlaps counts claim = all f (coords claim)
  where
   f coord = case Map.lookup coord counts of
-    (Just count) -> count == 1
-    Nothing      -> True
+    (Just claimCount) -> claimCount == 1
+    Nothing           -> True

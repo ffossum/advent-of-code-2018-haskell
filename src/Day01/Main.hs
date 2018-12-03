@@ -3,7 +3,6 @@ module Day01.Main where
 import           Data.Text                      ( Text )
 import qualified Data.Text                     as Text
 import qualified Data.Text.IO                  as TextIO
-import           Data.IntSet                    ( IntSet )
 import qualified Data.IntSet                   as IntSet
 import           Data.Attoparsec.Text
 
