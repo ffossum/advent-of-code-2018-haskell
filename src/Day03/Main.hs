@@ -34,14 +34,7 @@ coords c = do
   pure (x, y)
 
 coordCounts :: Claim -> Map Coord Int
-coordCounts = Map.fromList . (`zip` [1, 1 ..]) . coords
-
-letterCounts :: String -> Map Char Int
-letterCounts = foldl' f Map.empty
- where
-  f counts letter = Map.alter g letter counts
-  g (Just prev) = Just (prev + 1)
-  g Nothing     = Just 1
+coordCounts c = Map.fromList (zip (coords c) [1, 1 ..])
 
 parseClaim :: Text -> Either String Claim
 parseClaim = parseOnly $ do
