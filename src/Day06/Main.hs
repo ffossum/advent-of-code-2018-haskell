@@ -32,6 +32,7 @@ main = do
 
   let boundingLocations = getBoundaryLocations topLeft bottomRight
       insideLocations   = getInsideLocations topLeft bottomRight
+      allLocations      = Set.union boundingLocations insideLocations
 
   let infiniteAreaCoords =
         Set.foldl' Set.union Set.empty
@@ -54,6 +55,14 @@ main = do
           $ Map.map (closestCoords coords) (Map.fromSet id insideLocations)
 
   putStrLn $ "The largest finite area is " ++ (show largestArea)
+
+  let regionSize =
+        Map.size
+          $ Map.filter (< 10000)
+          $ fmap (totalDistance coords)
+          $ Map.fromSet id allLocations
+
+  putStrLn $ "The size of the region is " ++ (show regionSize)
 
 
 getBoundaryLocations :: Location -> Location -> Set Location
@@ -78,6 +87,7 @@ getInsideLocations (x1, y1) (x2, y2)
     y <- [y1 + 1 .. y2 - 1]
     pure $ (x, y)
 
+
 type Distance = Int
 
 closestCoords :: [Coord] -> Location -> Set Coord
@@ -91,6 +101,9 @@ distances allCoords loc = Map.fromListWith Set.union $ do
 
 distance :: Coord -> Coord -> Distance
 distance (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
+
+totalDistance :: [Coord] -> Location -> Distance
+totalDistance allCoords loc = sum (distance loc <$> allCoords)
 
 type Coord = (Int, Int)
 type Location = Coord
