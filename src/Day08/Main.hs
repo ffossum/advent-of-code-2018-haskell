@@ -2,6 +2,7 @@
 
 module Day08.Main where
 
+import           Data.Maybe
 import           Data.List
 import           Data.Text                      ( Text )
 import qualified Data.Text                     as Text
@@ -11,6 +12,8 @@ import           Data.Map.Strict                ( Map )
 import qualified Data.Map.Strict               as Map
 import           Data.Set                       ( Set )
 import qualified Data.Set                      as Set
+import           Data.Sequence                  ( Seq )
+import qualified Data.Sequence                 as Seq
 
 data Node = Node [Node] [Int] deriving (Eq, Show)
 
@@ -23,7 +26,7 @@ main = do
   let (Right node) = parseNode input
 
   putStrLn $ "The sum of all metadata is: " ++ (show $ sumMetadata node)
-  pure ()
+  putStrLn $ "The node value of the root node is: " ++ (show $ nodeValue node)
 
 parseNode :: Text -> Either String Node
 parseNode = parseOnly $ node
@@ -40,5 +43,12 @@ sumMetadata :: Node -> Int
 sumMetadata (Node children meta) =
   foldl' (\b a -> b + sumMetadata a) 0 children + sum meta
 
+nodeValue :: Node -> Int
+nodeValue (Node []       meta) = sum meta
+nodeValue (Node children meta) = sum $ do
+  m     <- meta
+  child <- maybeToList $ lookup m indexedChildren
+  pure $ nodeValue child
+  where indexedChildren = [1 ..] `zip` children
 
 
