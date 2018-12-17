@@ -32,7 +32,6 @@ main = do
 
   let boundingLocations = getBoundaryLocations topLeft bottomRight
       insideLocations   = getInsideLocations topLeft bottomRight
-      allLocations      = Set.union boundingLocations insideLocations
 
   let infiniteAreaCoords =
         Set.foldl' Set.union Set.empty
@@ -60,7 +59,7 @@ main = do
         Map.size
           $ Map.filter (< 10000)
           $ fmap (totalDistance coords)
-          $ Map.fromSet id allLocations
+          $ Map.fromSet id insideLocations
 
   putStrLn $ "The size of the region is " ++ (show regionSize)
 
