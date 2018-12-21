@@ -1,19 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
--- {-# LANGUAGE OverloadedLists #-}
 
 module Day10.Main where
 
-import           Data.Maybe
+import           Data.Foldable                  ( traverse_ )
 import           Data.List
 import           Data.Text                      ( Text )
 import qualified Data.Text                     as Text
 import qualified Data.Text.IO                  as TextIO
 import           Data.Map.Strict                ( Map )
 import qualified Data.Map.Strict               as Map
-import           Data.Set                       ( Set )
-import qualified Data.Set                      as Set
-import           Data.Sequence                  ( Seq )
-import qualified Data.Sequence                 as Seq
 import           Data.Attoparsec.Text    hiding ( take )
 
 main :: IO ()
@@ -36,7 +31,7 @@ main = do
           $ fmap rowImgMap
           $ imgRows
 
-  traverse putStrLn $ fmap showRow rows
+  traverse_ putStrLn $ fmap showRow rows
   putStrLn $ "Waited " ++ (show secondsTaken) ++ " seconds!"
 
 showRow :: [Bool] -> String
